@@ -42,18 +42,24 @@ Listen Sie die 5 wichtigsten Testfälle auf
 Erstellen Sie eine Tabelle mit diesen Testfälle als Markdown und stellen Sie diese in Ihr Repository.**
 
 
+## Übung 2
+**Suchen Sie sich eine Webseite zum Thema Autovermietung.
+Definieren Sie funktionale Black-Box Tests, die Sie brauchen, um diese Plattform zu betreiben.
+Listen Sie die 5 wichtigsten Testfälle auf
+Erstellen Sie eine Tabelle mit diesen Testfälle als Markdown und stellen Sie diese in Ihr Repository.**
+
 ### Tabelle der Testfälle
 
-**[Herzt](https://www.hertz.ch/rentacar/reservation/)**
+**[Hertz](https://www.hertz.ch/rentacar/reservation/)**
 
+| ID | Beschreibung | Erwartetes Resultat | Effektives Resultat | Status | Mögliche Ursache |
+|---|---|---|---|---|---|
+| 1 | Fahrzeugsuche mit gültiger Ort und Datum | Liste von verfügbaren Fahrzeuge wird angezeigt | Liste von verfügbaren Fahrzeugen wird angezeigt | Erfolgreich | - |
+| 2 | Fahrzeugsuche mit Rückgabedatum VOR Abholdatum | Fehlermeldung, Buchung wird verhindert | Funktioniert nicht, wenn ich probiere das anzuwählen, springt es automatisch zum Abholdatum | Fehler | Keine Validierung des Rückgabedatums, System korrigiert Eingabe automatisch statt Fehler zu zeigen |
+| 3 | Preisspanne ändern | Nur Autos in der Price Range werden angezeigt | Stimmt | Erfolgreich | - |
+| 4 | Ungültige Kartennummer eingeben | Lässt Zahlung nicht durch | Rote Warnung "Ihre Kartennummer ist ungültig." | Erfolgreich | - |
+| 5 | Ungültige Zahlungsdetails (Kartennummer, Ablaufdatum, Sicherheitscode) | Fehlermeldung bei allen 3 Feldern | Nur bei Kartennummer wird eine Fehlermeldung angezeigt | Fehler | Validierung für Ablaufdatum und Sicherheitscode fehlt oder ist unvollständig implementiert |
 
-| ID | Beschreibung | Erwartetes Resultat | Effektives Resultat | Status | Mögliche Ursache
-|---|---|---|---|---|---|  
-| 1 | 
-| 2 |
-| 3 | 
-| 4 |
-| 5 | 
 
 
 
