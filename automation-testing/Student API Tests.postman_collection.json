@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "0ba41635-58bf-4431-b145-4fe42f10e342",
+    "name": "Student API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43313779",
+    "_collection_link": "https://go.postman.co/collection/43313779-0ba41635-58bf-4431-b145-4fe42f10e342?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET-KN-AutomationTesting",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "   pm.test(\"Status code is 200\", function () {\r",
+              "       pm.response.to.have.status(200);\r",
+              "   });\r",
+              "   pm.test(\"Response is an array\", function () {\r",
+              "       pm.expect(pm.response.json()).to.be.an('array');\r",
+              "   });\r",
+              "   pm.test(\"Contains at least one student\", function () {\r",
+              "       pm.expect(pm.response.json().length).to.be.above(0);\r",
+              "   });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/students",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST-KN-AutomationTesting",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "   pm.test(\"Status code is 200\", function () {\r",
+              "       pm.response.to.have.status(200);\r",
+              "   });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "   {\r\n       \"name\": \"Test Student\",\r\n       \"email\": \"test@tbz.ch\"\r\n   }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/students",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "students"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
