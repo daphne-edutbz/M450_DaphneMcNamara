@@ -145,32 +145,38 @@ https://github.com/user-attachments/assets/de736a45-fdb0-4a28-8b52-ba3a1cee524f
 - Rechtsklick auf Thread Group → Add → Sampler → HTTP Request, dort Server (`localhost`), Port (`8081`), Method (`GET`) und Path (`/students`) eingetragen
 - Rechtsklick auf Thread Group → Add → Listener → Summary Report, um aggregierten Resultate (Durchschnitt, Fehlerrate, Durchsatz) nach Testlauf einsehen zu können
 
+
 **Ergebnisse (Summary Report):**
-- Durchschnittliche Antwortzeit: 90 ms -> bei "Average" im Summary Report
-- Fehlerrate: 77.85 % -> "Error %"
-- Durchsatz: 245.1 Requests/Sekunde -> "Throughput"
 
-<img width="758" height="470" alt="JMeterSummaryReport2" src="https://github.com/user-attachments/assets/50c294e3-0dee-4309-8908-3bf35d5e11ea" />
+- **Erster Versuch (50 Nutzer / 500 Requests):**
+  - Durchschnittliche Antwortzeit: 2 ms -> bei "Average" im Summary Report
+  - Fehlerrate: 0.00 % -> bei "Error %"
+  - Durchsatz: 100.3 Requests/Sekunde -> bei "Throughput"
 
-- Erster Versuch:
 
-<img width="959" height="566" alt="JMeterSummaryReport" src="https://github.com/user-attachments/assets/223f6f67-fad0-4932-8987-826864c27b6f" />
+<img width="959" height="562" alt="JMeterSummaryReport" src="https://github.com/user-attachments/assets/48ff68f9-6d30-4876-9938-0a1aed177485" />
+
+
+- **Zweiter Versuch mit erhöhter Last (500 Nutzer / 5500 Requests):**
+  - Durchschnittliche Antwortzeit: 194 ms -> bei "Average" im Summary Report
+  - Fehlerrate: 0.00 % -> bei "Error %"
+  - Durchsatz: 68.2 Requests/Sekunde -> bei "Throughput"
+
+<img width="959" height="565" alt="JMeter500Threads" src="https://github.com/user-attachments/assets/32374317-373e-4ee2-9976-4551e6ee6ad6" />
+
 
 **Erkundete Funktionalitäten:**
-- Skalierung der Nutzerzahl (50 → 500) und Auswirkung auf Antwortzeit
+- Skalierung der Nutzerzahl (50 → 500) und Auswirkung auf die Antwortzeit
 - View Results Tree zur Detailanalyse einzelner Requests
-
-<img width="758" height="470" alt="JMeterSummaryReport2" src="https://github.com/user-attachments/assets/b5f38c86-db87-4844-b11a-8b7454bff857" />
-
-- Test des POST-Endpoints mit Body-Daten
-
-<img width="957" height="561" alt="JMeter500Threads" src="https://github.com/user-attachments/assets/88fb68c6-7c4c-4e5e-ba3b-fb9627caf760" />
+- Summary Report zur aggregierten Auswertung von Antwortzeiten, Durchsatz und Fehlerraten
 
 **Erkenntnisse bei Erhöhung von 50 auf 500 gleichzeitige Nutzer:**
-- durchschnittliche Antwortzeit nicht extrem gestiegen (von ca. 90 ms auf 82 ms)
-- Fehlerrate durchgehend sehr hoch geblieben (77.85 % bzw. 71.13 %)
-    -> Das zeigt, dass das Backend mit dem eingebetteten Tomcat-Server unter so hoher gleichzeitiger Last nicht mehr alle Requests annehmen kann, viele Verbindungen wurden vermutlich abgelehnt oder sind in einen Timeout gelaufen, bevor überhaupt eine Antwort zustande kam. Das
-    -> macht deutlich, wieso Lasttests wichtig sind: Im normalen Betrieb mit wenigen Nutzern würde man gar nicht merken, dass die Applikation unter höherer Last so instabil wird. Für eine produktive Umgebung müsste man hier entweder die Thread-Pool-Konfiguration des Servers anpassen oder die Anwendung horizontal skalieren.
+- Die durchschnittliche Antwortzeit stieg von sehr schnellen 2 ms auf 194 ms an, wobei die maximale Antwortzeit bei einzelner Spitzenlast bis zu 5409 ms (~5.4 Sekunden) erreichte.
+- Die Fehlerrate blieb auch bei 500 gleichzeitigen Nutzern bei 0.00 %, was zeigt, dass das Backend alle 5500 Anfragen erfolgreich verarbeiten konnte, ohne Verbindungen abzulehnen.
+- Der Durchsatz sank leicht von 100.3 Req/s auf 68.2 Req/s, da der Server die hohe Anzahl paralleler Anfragen nacheinander abarbeiten musste.
+- Das zeigt gut, wieso Lasttests wichtig sind: Selbst wenn eine Anwendung ohne Fehler stabil bleibt (0 % Error), führt eine hohe Last zu spürbaren Verzögerungen bei der Antwortzeit, was im produktiven Betrieb Optimierungen am Thread-Pool oder Caching erforderlich machen würde.
+
+
 
 ## Bonusaufgabe - Feature-Schätzung
 
