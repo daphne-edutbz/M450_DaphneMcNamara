@@ -1,0 +1,20 @@
+# Videos
+*.mp4
+
+# Node modules / Frontend dependencies
+**/node_modules/
+dist/
+build/
+
+# Maven build targets (Backend)
+**/target/
+
+# IntelliJ IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
