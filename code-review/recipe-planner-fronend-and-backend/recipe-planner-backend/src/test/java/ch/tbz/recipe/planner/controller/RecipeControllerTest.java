@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 class RecipeControllerTest {
 
@@ -86,5 +88,26 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.name").value("Lasagne"));
 
         verify(service).addRecipe(any(Recipe.class));
+    }
+
+    @Test
+    void updateRecipe_existingId_returns200() throws Exception {
+        when(service.updateRecipe(eq(recipeId), any(Recipe.class))).thenReturn(recipe);
+
+        mockMvc.perform(put("/api/recipes/{id}", recipeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recipe)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Lasagne"));
+    }
+
+    @Test
+    void updateRecipe_unknownId_returns404() throws Exception {
+        when(service.updateRecipe(eq(recipeId), any(Recipe.class))).thenReturn(null);
+
+        mockMvc.perform(put("/api/recipes/{id}", recipeId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recipe)))
+                .andExpect(status().isNotFound());
     }
 }

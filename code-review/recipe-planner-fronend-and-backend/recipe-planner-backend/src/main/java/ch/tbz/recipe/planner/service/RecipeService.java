@@ -34,4 +34,13 @@ public class RecipeService {
         var createdRecipe = repository.save(mapper.domainToEntity(recipe));
         return mapper.entityToDomain(createdRecipe);
     }
+
+    public Recipe updateRecipe(UUID recipeId, Recipe recipe) {
+        if (repository.findById(recipeId).isEmpty()) {
+            return null;
+        }
+        recipe.setId(recipeId);
+        var updated = repository.save(mapper.domainToEntity(recipe));
+        return mapper.entityToDomain(updated);
+    }
 }
