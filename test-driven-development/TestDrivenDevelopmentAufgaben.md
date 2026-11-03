@@ -6,7 +6,7 @@
 ## Aufgabe 1 - Setup environment
 
 ### Einrichtung PHP & PHPUnit
-- PHP (8.4) inkl. `mbstring`-Extension und PHPUnit installiert bzw. in der IDE (PhpStorm / IntelliJ) konfiguriert
+- PHP (8.3) inkl. `mbstring`-Extension und PHPUnit installiert bzw. in der IDE (PhpStorm / IntelliJ) konfiguriert
 - `FancyApp.zip` entpackt im Ordner `FancyApp/` (`Application/MyFancyClass.php` und `Testcases/Test.php`)
 
 ### Anpassung in `Testcases/Test.php` für aktuelles PHPUnit
@@ -27,30 +27,37 @@ class Test extends TestCase
 Vor dem Schreiben des Codes alle Tests unverändert ausgeführt -> wie erwartet schlagen alle 3 Testmethoden fehl, weil die Methodenrümpfe in `MyFancyClass.php` noch leer sind (`null` zurückgeben):
 
 ```text
-PHPUnit 13.0.6 by Sebastian Bergmann and contributors.
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
 
-Runtime:       PHP 8.4.27
+Runtime:       PHP 8.3.36
 
 FFF                                                                 3 / 3 (100%)
+
+Time: 00:00.006, Memory: 30.00 MB
 
 There were 3 failures:
 
 1) Test::testShortString
 Failed asserting that null matches expected 'Ich bin Text mit 35 Char Länge (35)'.
 
+C:\Projects\GitHub\M450_DaphneMcNamara\test-driven-development\FancyApp\Testcases\Test.php:36
+
 2) Test::testCalcAverage
 Failed asserting that null matches expected 5.
 
+C:\Projects\GitHub\M450_DaphneMcNamara\test-driven-development\FancyApp\Testcases\Test.php:61
+
 3) Test::testGetOpposite
 Failed asserting that null matches expected '4.5,5,5.5'.
+
+C:\Projects\GitHub\M450_DaphneMcNamara\test-driven-development\FancyApp\Testcases\Test.php:82
 
 FAILURES!
 Tests: 3, Assertions: 5, Failures: 3.
 ```
 
-<!-- TODO Screenshot einfügen: Initialer Testlauf in der IDE (alle 3 Tests rot / fehlgeschlagen), z.B.:
-![FailedTests](./Screenshots/failedTests.png)
--->
+<img width="902" height="441" alt="failedTests" src="https://github.com/user-attachments/assets/653b4bf2-8501-48d2-945b-7fc6bbb81dc6" />
+
 
 
 ## Aufgabe 2 - Methoden implementieren
@@ -67,8 +74,8 @@ Tests: 3, Assertions: 5, Failures: 3.
   - Berechnet den Durchschnitt aller Zahlen im Array `$values`
   - Leeres Array `[]` gibt `0` zurück
   - Akzeptiert sowohl Zahlen (`[4.5, 5.0, 5.5]`) als auch numerische Strings (`['4.5', '5.0', '5.5']`)
-  - Enthält das Array mindestens einen nicht-numerischen Wert (zb. `'bestanden'`), gibt die Methode `false` zurück
-
+   - Funktional für alle gültigen Arrays identisch; `array_sum()` alleine ohne Vorprüfung würde bei `'bestanden'` (PHP 8.3) nur eine Warning auslösen und `4.5` zurückgeben statt `false` -> Test würde fehlschlagen
+    
 - **`getOpposite($value, $delimiter = ',')`**:
   - Kehrt den Typ zwischen `array` und `string` um:
     - Ist `$value` ein Array $\rightarrow$ verbindet die Elemente mit `$delimiter` zu einem String (`implode`)
@@ -142,34 +149,34 @@ class MyFancyClass
 Nach der Implementierung laufen alle 3 Testmethoden mit sämtlichen 27 Assertions erfolgreich durch:
 
 ```text
-PHPUnit 13.0.6 by Sebastian Bergmann and contributors.
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
 
-Runtime:       PHP 8.4.27
+Runtime:       PHP 8.3.36
 
 ...                                                                 3 / 3 (100%)
 
-Time: 00:00.084, Memory: 8.00 MB
+Time: 00:00.005, Memory: 30.00 MB
 
 OK (3 tests, 27 assertions)
+
 ```
 
-<!-- TODO Screenshot einfügen: Erfolgreicher Testlauf in der IDE (alle 3 Tests / 27 Assertions grün), z.B.:
-![PassedTests](./Screenshots/passedTests.png)
--->
+<img width="926" height="217" alt="passedTests" src="https://github.com/user-attachments/assets/f02422a6-0d78-46b2-8a47-2e9a5e6442bf" />
+
 
 
 ## Aufgabe 3 - Auswerten
 
 ### Vergleich möglicher Implementierungen
-Auch wenn verschiedene Lösungen dieselben 27 Assertions in `Test.php` grün machen, kann der Code unterschiedlich aufgebaut sein:
+Auch wenn verschiedene Lösungen dieselben 27 Assertions in `Test.php` grün machen, kann Code unterschiedlich aufgebaut sein:
 
 1. **`calcAverage` — `foreach`-Schleife vs. `array_sum()`:**
-   - Unsere Lösung prüft jedes Element in einer `foreach`-Schleife mit `is_numeric()` und summiert gleichzeitig auf
+   - die Lösung prüft jedes Element in `foreach`-Schleife mit `is_numeric()` und summiert gleichzeitig auf
    - Alternativ könnte man mit `array_filter($values, 'is_numeric')` prüfen, ob `count(...) === count($values)` stimmt, und danach `array_sum($values) / count($values)` rechnen
    - Funktional für alle gültigen Arrays identisch; `array_sum()` alleine ohne Vorprüfung würde aber bei `'bestanden'` in PHP 8 eine Type-Warnung auslösen statt `false` zurückzugeben
 
 2. **`shortString` — `mb_strlen` vs. `strlen`:**
-   - Eine Implementierung mit `strlen()` und `substr()` besteht fast alle Tests mit lateinischem Blindtext (`Lorem ipsum...`), scheitert oder verhält sich aber anders bei Strings mit Umlauten/Sonderzeichen wie `'Länge'`
+   - Implementierung mit `strlen()` und `substr()` besteht fast alle Tests mit lateinischem Blindtext (`Lorem ipsum...`), scheitert oder verhält sich aber anders bei Strings mit Umlauten/Sonderzeichen wie `'Länge'`
 
 ### Mögliche Abweichungen bei nicht getesteten Randfällen
 Für alle in `Test.php` definierten Fälle verhalten sich grüne Lösungen gleich. Unterschiede in der Funktionalität können aber dort auftreten, wo **keine Unit-Tests existieren**:
@@ -182,7 +189,13 @@ Für alle in `Test.php` definierten Fälle verhalten sich grüne Lösungen gleic
 | `shortString('Hallo', -5)` (negative Länge) | Nein | Gibt `false` zurück, da `mb_strlen($ending) > -5` | Negativer Offset in `substr()` schneidet vom Ende her ab |
 | `getOpposite('')` (leerer String) | Nein | `explode(',', '')` liefert `['']` (1 Element) | Manche würden für leeren String evtl. `[]` erwarten |
 
+
+**Überprüfung der Randfälle mit eigenem Skript (`check.php`, Reihenfolge wie in der Tabelle):**
+
+<img width="482" height="142" alt="Randfälle-ig" src="https://github.com/user-attachments/assets/f3b2e1b7-337b-4f73-812b-4272ad8da87d" />
+
+
 ### Erkenntnisse
-- Durch die vorgegebenen Unit-Tests ist das gewünschte Verhalten für den Normalbetrieb und die wichtigsten Fehlerfälle klar spezifiziert, weshalb verschiedene Gruppen im Kern zur gleichen Programmlogik kommen
+- Durch vorgegebenen Unit-Tests ist gewünschte Verhalten für Normalbetrieb und wichtigsten Fehlerfälle klar spezifiziert, weshalb verschiedene Gruppen im Kern zur gleichen Programmlogik kommen
 - Abweichungen im Code (zb. Schleife vs. Array-Funktionen) sind vernachlässigbar, solange Lesbarkeit und Verhalten stimmen
 - Funktionale Unterschiede entstehen nur bei Randfällen, die in `Test.php` nicht abgedeckt sind -> zeigt gut, dass bei TDD die Qualität der Spezifikation direkt davon abhängt, wie vollständig die Randfälle (Boundary Values / Negativtests) in den Tests abgedeckt wurden
